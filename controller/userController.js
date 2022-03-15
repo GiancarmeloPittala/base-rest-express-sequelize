@@ -1,6 +1,7 @@
 const Apierror = require("../error/api-error")
 const jwt = require('jsonwebtoken');
 
+const { UserRole, Role } = require('../models')
 const { JWT_SECRET } = process.env;
 const { findAll, bulkCreate, findAndCountAll, update, destroy, count, findOne } = require('../services/userService');
 const bcrypt = require('bcryptjs');
@@ -23,7 +24,14 @@ class Controller{
          order: _order,
          limit: _limit,
          offset: _offset,
-         attributes: _attributes
+         attributes: _attributes,
+         include: [  {
+          model: UserRole,
+          include: [ {
+            model: Role,
+            attributes: ['id','name']
+          } ]
+        } ]
       })
 
       res.json(users)
@@ -135,7 +143,15 @@ class Controller{
     try {
       const { id } = req.user;
 
-      const user = await findOne({ where: { id } })
+      const user = await findOne({ where: { id }, include: [
+        {
+          model: UserRole,
+          include: [ {
+            model: Role,
+            attributes: ['id','name']
+          } ]
+        }
+      ] })
 
       if ( !user ) throw 'L\'utente non è stato trovato'
 
@@ -233,7 +249,7 @@ class Controller{
 
       const _count = await count({ where: _where })
 
-      res.json( _count )
+      res.json( {count: _count} )
     } catch (error) {
       n ( Apierror.badRequest(error) ) 
     }

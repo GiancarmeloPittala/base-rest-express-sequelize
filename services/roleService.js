@@ -1,4 +1,4 @@
-const { User } = require('../models');
+const { Role } = require('../models');
 
 class Service {
   async findAndCountAll(data){
@@ -7,8 +7,8 @@ class Service {
         where, order, limit, offset, attributes, include
       } = data;
 
-      const rows = await User.findAll({ include, where, order, limit, offset, attributes })
-      const count = await User.count({ where })
+      const rows = await Role.findAll({ include, where, order, limit, offset, attributes })
+      const count = await Role.count({ where })
 
       return { rows, count }
     } catch (error) {
@@ -21,7 +21,7 @@ class Service {
         where, order, limit, offset, attributes
       } = data;
 
-      return await User.findAll({where, order, limit, offset, attributes })
+      return await Role.findAll({where, order, limit, offset, attributes })
     } catch (error) {
       throw error;
     }
@@ -32,14 +32,14 @@ class Service {
         where, order, limit, offset, attributes, include
       } = data;
 
-      return await User.findOne({ include, where, order, limit, offset, attributes })
+      return await Role.findOne({ where, order, limit, offset, attributes, include })
     } catch (error) {
       throw error;
     }
   }
   async bulkCreate(data){
     try {
-      return await User.bulkCreate(data)
+      return await Role.bulkCreate(data)
     } catch (error) {
       throw error;
     }
@@ -47,7 +47,7 @@ class Service {
   async update({data, where}){
     try {
       if (!where) throw "Passare il where";    
-      return await User.update(data,{where: where })
+      return await Role.update(data,{where: where })
     } catch (error) {
       console.error( error )
       throw error;
@@ -56,7 +56,7 @@ class Service {
   async destroy({where}){
     try {
       if (!where) throw "Passare il where";    
-      return await User.destroy({where: where })
+      return await Role.destroy({where: where })
     } catch (error) {
       console.error( error )
       throw error;
@@ -64,7 +64,7 @@ class Service {
   }
   async count({where}){
     try {
-      return await User.count({where: where })
+      return await Role.count({where: where })
     } catch (error) {
       console.error( error )
       throw error;
