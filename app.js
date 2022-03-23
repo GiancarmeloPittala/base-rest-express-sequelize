@@ -18,8 +18,8 @@
 
     app.use('/api', api )
     
-    app.get("*", express.static(__dirname + '/public/dist'));
-    app.get("*", (req,res) => {res.status(200).sendFile(__dirname + '/public/dist/404.html')} );
+    app.get("*", express.static(__dirname + '/public'));
+    // app.get("*", (req,res) => {res.status(200).sendFile(__dirname + '/public/dist/404.html')} );
     
     const Sequelize = require('sequelize');
     const Op = Sequelize.Op;
