@@ -1,6 +1,6 @@
 const Apierror = require("../error/api-error")
 
-const { UserLoggedIn, Role } = require('../models')
+const { UserLoggedIn, Role, User } = require('../models')
 const { findAll, bulkCreate, findAndCountAll, destroy, count, findOne } = require('../services/userLoggedInService');
 const bcrypt = require('bcryptjs');
 
@@ -16,13 +16,18 @@ class Controller{
       let _limit = Number(  limit  ?? 1000 );
       let _offset = Number(  offset  ?? 0 );
       let _attributes = attributes ? JSON.parse(  attributes ) : undefined;
-
+      let _include = [{
+        model: User,
+        attributes: ['id','name'] 
+      }
+    ];
       const UserLoggedIn = await findAndCountAll({
          where: _where,
          order: _order,
          limit: _limit,
          offset: _offset,
-         attributes: _attributes
+         attributes: _attributes,
+         include: _include
       })
 
       res.json(UserLoggedIn)

@@ -1,6 +1,6 @@
 const Apierror = require("../error/api-error")
 
-const { UserRole, Role } = require('../models')
+const { User, UserRole, Role } = require('../models')
 const { findAll, bulkCreate, findAndCountAll, destroy, count, findOne } = require('../services/userRoleService');
 const bcrypt = require('bcryptjs');
 
@@ -16,13 +16,22 @@ class Controller{
       let _limit = Number(  limit  ?? 1000 );
       let _offset = Number(  offset  ?? 0 );
       let _attributes = attributes ? JSON.parse(  attributes ) : undefined;
-
+      let _include = [{
+          model: User,
+          attributes: ['id','name','email'] 
+        },
+        {
+          model: Role,
+          attributes: ['id','name'] 
+        }
+      ];
       const userRole = await findAndCountAll({
          where: _where,
          order: _order,
          limit: _limit,
          offset: _offset,
-         attributes: _attributes
+         attributes: _attributes,
+         include: _include
       })
 
       res.json(userRole)

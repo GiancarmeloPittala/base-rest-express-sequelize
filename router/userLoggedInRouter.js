@@ -1,6 +1,6 @@
 const
   router = require('express').Router(),
-  { count, getAll, create, deleteOne } = require('../controller/userRoleController.js');
+  { count, getAll, create, deleteOne } = require('../controller/userLoggedInController');
 
 const isAdmin = require('../middleware/isAdmin')
 const apicache = require('apicache')
