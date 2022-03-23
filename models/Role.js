@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
      */
 
      static associate({UserRole, Role}) {
-      this.hasMany(UserRole,{onDelete: 'CASCADE', onUpdate: 'CASCADE'}) // for native sequelize functions
+      this.hasMany(UserRole,{ onDelete: 'CASCADE', onUpdate: 'CASCADE'}) // for native sequelize functions
     }
   }
   Role.init({

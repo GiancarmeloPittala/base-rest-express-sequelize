@@ -12,6 +12,8 @@ const isAdmin = async (req,res,n) => {
     const userRoles = await user.getUserRoles();
     const userRolesIds = userRoles.map( role => role.RoleId )
 
+    console.log( userRoles )
+    console.log( adminRole)
     if ( userRolesIds.includes(adminRole.id) )
       return n();
     else

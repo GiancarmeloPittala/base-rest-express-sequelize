@@ -9,6 +9,8 @@ const cors = require('cors');
 const useragent = require('express-useragent');
 const ratelimiter = require('./ratelimiter')
 const userRouter = require('./userRouter')
+const userRoleRouter = require('./userRoleRouter')
+const userLoggedInRouter = require('./userLoggedInRouter')
 const roleRouter = require('./roleRouter')
 
 
@@ -25,6 +27,8 @@ Router
 
   .use( '/user', userRouter )
   .use( '/role', roleRouter )
+  .use( '/userRole', userRoleRouter )
+  .use( '/userLoggedIn', userLoggedInRouter )
   .get('/ping', (_, __) => __.send("Pong"))
   .use( notFound )
   .use( apiErrorHandler )

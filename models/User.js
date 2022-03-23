@@ -16,8 +16,8 @@ module.exports = (sequelize, DataTypes) => {
 
     static associate({UserRole, Role, UserLoggedIn}) {
       this.belongsToMany(Role, { through: UserRole, onDelete: 'CASCADE' }) // for 2 primary keys
-      this.hasMany(UserRole, {onDelete: 'CASCADE', onUpdate: 'CASCADE'}) // for native sequelize functions
-      this.hasMany(UserLoggedIn, {onDelete: 'CASCADE', onUpdate: 'CASCADE'})
+      this.hasMany(UserRole, { onDelete: 'CASCADE', onUpdate: 'CASCADE'}) // for native sequelize functions
+      this.hasMany(UserLoggedIn, { onDelete: 'CASCADE', onUpdate: 'CASCADE'})
     }
   }
   User.init({
