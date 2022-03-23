@@ -17,7 +17,7 @@ class Controller{
       let _order = order ? JSON.parse( order ) : undefined;
       let _limit = Number(  limit  ?? 1000 );
       let _offset = Number(  offset  ?? 0 );
-      let _attributes = attributes ? JSON.parse(  attributes ) : undefined;
+      let _attributes = attributes ? JSON.parse( attributes ) : undefined;
 
       const users = await findAndCountAll({
          where: _where,
