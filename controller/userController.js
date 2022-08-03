@@ -7,49 +7,13 @@ const { findAll, bulkCreate, findAndCountAll, update, destroy, count, findOne } 
 const bcrypt = require('bcryptjs');
 
 
-class Controller{
-
-  async getAll(req,res,n){
-    try {
-      const { where, order, limit, offset, attributes } = req.query;
-
-      let _where = where ? JSON.parse( where ) : undefined;
-      let _order = order ? JSON.parse( order ) : undefined;
-      let _limit = Number(  limit  ?? 1000 );
-      let _offset = Number(  offset  ?? 0 );
-      let _attributes = attributes ? JSON.parse( attributes ) : undefined;
-
-      const users = await findAndCountAll({
-         where: _where,
-         order: _order,
-         limit: _limit,
-         offset: _offset,
-         attributes: _attributes,
-         include: [  {
-          model: UserRole,
-          include: [ {
-            model: Role,
-            attributes: ['id','name']
-          } ]
-        } ]
-      })
-
-      res.json(users)
-
-      return;
-    } catch (error) {
-      n( Apierror.badRequest(error) )
-    }
-  }
-  async getById(req,res,n){
-    try {
-      const { id } = req.params;
-      const user = await findOne({ where: { id } })
-
-      res.json({ user })
-    } catch (error) {
-      n( Apierror.badRequest() )
-    }
+const BaseController = require("./Controller");
+class Controller extends BaseController{
+  constructor() {
+    super({
+      tableName: 'User',
+      include: []
+    }); 
   }
   async create(req,res,n){
     try {
@@ -104,41 +68,7 @@ class Controller{
       n( Apierror.badRequest(error) )
     }
   }
-  async editOne(req,res,n){
-    try {
-      const { id } = req.params;
 
-      const user = await findOne({ where: { id } })
-      const notAcceptedCol = ['createdAt', 'id', 'updatedAt']
-      if ( !user ) throw 'L\'utente non è stato trovato'
-      
-      //Modify colonne consentite
-      for ( let col in req.body )
-        if( !notAcceptedCol.includes( col ) )
-          user[col] = req.body[col]
-
-      await user.save()
-
-      return res.json({user});
-    } catch (error) {
-      n( Apierror.badRequest() )
-    }
-  }
-  async deleteOne(req,res,n){
-    try {
-      const { id } = req.params;
-      
-      const user = await findOne({ where: { id } })
-
-      if ( !user ) throw 'L\'user not found';
-
-      await user.destroy();
-
-      return res.json({ msg: 'Account deleted successfully' });
-    } catch (error) {
-      n( Apierror.badRequest() )
-    }
-  }
   async getMe(req,res,n){
     try {
       const { id } = req.user;
@@ -242,20 +172,7 @@ class Controller{
       n ( Apierror.badRequest(error) ) 
     }
   }
-  async count(req,res,n){
-    try {
-      const { where } = req.query;
-      let _where = where ? JSON.parse( where ) : undefined;
-
-      const _count = await count({ where: _where })
-
-      res.json( {count: _count} )
-    } catch (error) {
-      n ( Apierror.badRequest(error) ) 
-    }
-  }
 
 }
 
-
-module.exports = new Controller;
+module.exports = Controller;

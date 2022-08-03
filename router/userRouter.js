@@ -1,5 +1,6 @@
 const
   router = require('express').Router(),
+  User = require('../controller/userController'),
   { count, getAll, getById, register, create, editOne, deleteOne, getMe, editMe, delMe, login, logout } = require('../controller/userController.js');
 
 const isAdmin = require('../middleware/isAdmin')
@@ -7,21 +8,25 @@ const isAuth = require('../middleware/isAuth')
 const apicache = require('apicache')
 const cache = apicache.middleware
 
+const user = new User()
+
+
 router
   
-  .get ('/me', isAuth, getMe)
-  .put ('/me', isAuth, editMe)
-  .delete ('/me', isAuth, delMe)
-  .post('/logout',isAuth, logout )
-  
-  .get('/', isAdmin, cache("25 seconds"), getAll)
-  .post('/', isAdmin, create)
-  .put('/:id', isAdmin, editOne)
-  .delete('/:id', isAdmin, deleteOne )
-  .get('/count', isAdmin, cache("25 seconds"), count)
-  .get('/:id', isAdmin, cache("25 seconds"), getById)
+  .get ('/me', isAuth, user.getMe)
+  .put ('/me', isAuth, user.editMe)
+  .delete ('/me', isAuth, user.delMe)
+  .post('/logout',isAuth, user.logout )
 
-  .post('/login', login )
-  .post('/register', register)
+
+  .get('/', isAdmin, (_,__,n) => user.getAll(_,__,n) )
+  .post('/', isAdmin, (_,__,n) => user.createOne(_,__,n))
+  .put('/:id', isAdmin, (_,__,n) => user.editOne(_,__,n))
+  .delete('/:id', isAdmin, (_,__,n) => user.deleteOne(_,__,n))
+  .get('/count', cache("25 seconds"), isAdmin, (_,__,n) => user.count(_,__,n))
+  .get('/:id', cache("25 seconds"), isAdmin, (_,__,n) => user.getOne(_,__,n))  
+
+  .post('/login', user.login )
+  .post('/register', user.register)
 
 module.exports = router;

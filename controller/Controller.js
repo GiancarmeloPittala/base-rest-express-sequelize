@@ -14,9 +14,9 @@ class BaseController{
 
   async getAll(req,res,n){
     try {
+
       const { where, order, limit, offset, attributes } = req.query;
-      // qui thi è undefined
-      console.log( this.tableName )
+
       let _where = where ? JSON.parse( where ) : undefined;
       let _order = order ? JSON.parse( order ) : undefined;
       let _limit = Number(  limit  ?? 1000 );
@@ -24,7 +24,7 @@ class BaseController{
       let _attributes = attributes ? JSON.parse(  attributes ) : undefined;
       let include = this.include || [];
 
-      const rows = await models[this.tableName].findAll({ 
+      const data = await models[this.tableName].findAll({ 
         include, 
         where: _where , 
         order: _order , 
@@ -34,32 +34,56 @@ class BaseController{
 
       const count = await models[this.tableName].count({ where })
 
-      res.json({rows,count})
+      return res.json({data,count})
     } catch (error) {
       n ( Apierror.badRequest(error) )
     }
   }
   async createOne(req,res,n){
     try {
-      const data = req.body;
-      const newData = await models[this.tableName].create(data)
+      const {data: dataBody} = req.body;
+      const data = await models[this.tableName].create(dataBody)
 
-      res.json( { data: newData } )
+      res.json( { data } )
 
     } catch (error) {
       n ( Apierror.badRequest(error) )
     }
   }
-  getOne(req,res,n){
+  async getOne(req,res,n){
     try {
-      res.json({})
+      const { id } = req.params;
+      const data = await models[this.tableName].findByPk(id);
+
+      res.json({data})
     } catch (error) {
       n ( Apierror.badRequest(error) )
     }
   }
-  editOne(req,res,n){
+  async editOne(req,res,n){
     try {
-      res.json({})
+
+      const { id } = req.params;
+      const { body } = req;
+
+      const notModifyCol = ['id', 'createdAt', 'updatedAt'];
+
+      let data = await models[this.tableName].findByPk(id);
+
+      if( !data ) throw 'Id not found on '+ this.tableName + ' table';
+
+      // Update value
+      for( const key in body )
+        if( !notModifyCol.includes( key ))
+            data[key] = body[key]
+
+      // save value on database
+      await data.save()
+
+      // get new data from database
+      data = await models[this.tableName].findByPk(id);
+
+      res.json({data})
       
     } catch (error) {
       n ( Apierror.badRequest(error) )
@@ -68,9 +92,9 @@ class BaseController{
   async deleteOne(req,res,n){
     try {
       const { id } = req.params;
-      const result = await models[this.tableName].destroy({ where: { id } })
+      const data = await models[this.tableName].destroy({ where: { id } })
 
-      res.json( result )
+      res.json( {data} )
     } catch (error) {
       n ( Apierror.badRequest(error) ) 
     }

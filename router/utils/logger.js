@@ -6,7 +6,7 @@ const generate = () => (new Date().toISOString().substring(0,10) + '.log');
 
 const accessLogStream = rfs.createStream(generate(), {
   interval: '1d', // rotate daily
-  path: path.join(__dirname, '../', 'log')
+  path: path.join(__dirname, '../../', 'log')
 })
 
 const opts = { 

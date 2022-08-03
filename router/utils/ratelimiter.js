@@ -6,4 +6,4 @@ const apiLimiter = rateLimit({
   standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
 })  
 
-module.exports = () => { return apiLimiter}
+module.exports = () => { return apiLimiter }

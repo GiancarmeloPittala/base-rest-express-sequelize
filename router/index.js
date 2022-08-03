@@ -4,10 +4,11 @@ const Router = express.Router();
 const helmet = require('helmet');
 const notFound = require('../error/notFoundHandler'); 
 const apiErrorHandler = require('../error/api-error-handler'); 
-const logger = require('./logger');
+const logger = require('./utils/logger');
 const cors = require('cors'); 
 const useragent = require('express-useragent');
-const ratelimiter = require('./ratelimiter')
+const ratelimiter = require('./utils/ratelimiter')
+const i18n = require('./utils/i18n')
 const userRouter = require('./userRouter')
 const userRoleRouter = require('./userRoleRouter')
 const userLoggedInRouter = require('./userLoggedInRouter')
@@ -22,6 +23,7 @@ Router
   .use( cors() )
   .use( express.json() )
   .use( express.urlencoded({extended: true}) )
+  .use( i18n() )
 
   /*All ROUTERS */
 
@@ -29,7 +31,7 @@ Router
   .use( '/role', roleRouter )
   .use( '/userRole', userRoleRouter )
   .use( '/userLoggedIn', userLoggedInRouter )
-  .get('/ping', (_, __) => __.send("Pong"))
+  .get( '/ping', (_, __) => __.send("Pong"))
   .use( notFound )
   .use( apiErrorHandler )
 

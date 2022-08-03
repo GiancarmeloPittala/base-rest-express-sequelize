@@ -1,4 +1,4 @@
-const logger = require('../router/logger')
+const logger = require('../router/utils/logger')
 
 require('dotenv').config()
 
