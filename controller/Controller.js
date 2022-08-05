@@ -32,7 +32,7 @@ class BaseController{
         offset: _offset , 
         attributes: _attributes  })
 
-      const count = await models[this.tableName].count({ where })
+      const count = await models[this.tableName].count({ _where })
 
       return res.json({data,count})
     } catch (error) {
