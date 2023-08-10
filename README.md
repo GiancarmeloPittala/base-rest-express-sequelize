@@ -11,7 +11,7 @@
 ### Autenticated Routers 
 > Need auth bearer token
 
-`GET`   /user/me
+`GET`   /user/me 
 
 `PUT`   /user/me
 
